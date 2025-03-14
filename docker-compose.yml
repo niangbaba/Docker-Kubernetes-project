@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: userappli
+      MYSQL_USER: userappli
+      MYSQL_PASSWORD: userappli
+      MYSQL_ROOT_PASSWORD: rootpassword
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: .
+    restart: always
+    depends_on:
+      # - db
+      db:
+        condition: service_healthy  # Attend que MySQL soit prêt
+    environment:
+      MYSQL_DATABASE: userappli
+      MYSQL_USER: userappli
+      MYSQL_PASSWORD: userappli
+      MYSQL_HOST: db
+      MYSQL_PORT: 3306
+      DEBUG: 'True'
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+
+volumes:
+  mysql_data:

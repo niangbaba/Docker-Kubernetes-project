@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+data:
+  MYSQL_DATABASE: "userappli"
+  MYSQL_HOST: "mysql-service"
+  MYSQL_PORT: "3306"
+  DEBUG: "True"
